@@ -1,0 +1,62 @@
+---
+import { outcomes } from "../data/content";
+---
+
+<section class="section" id="outcomes">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow is-centered">{outcomes.eyebrow}</p>
+      <h2>{outcomes.title}</h2>
+      <p class="lead">{outcomes.lead}</p>
+    </div>
+
+    <div class="quotes">
+      {
+        outcomes.items.map((t, i) => (
+          <figure class="card card-hover quote reveal" style={`--reveal-delay:${i * 80}ms`}>
+            <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+            <blockquote>{t.quote}</blockquote>
+            <figcaption>
+              <span class="quote-role">{t.role}</span>
+              <span class="quote-company">{t.company}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .quotes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 1.25rem;
+    margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .quote { display: flex; flex-direction: column; }
+  .quote-mark {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    line-height: 0.7;
+    height: 1.4rem;
+    color: var(--cyan-500);
+    opacity: 0.55;
+  }
+  .quote blockquote {
+    margin: 1.2rem 0 1.6rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .quote figcaption {
+    margin-top: auto;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .quote-role { font-weight: 600; color: var(--text-strong); }
+  .quote-company { font-size: var(--fs-sm); color: var(--faint); }
+</style>

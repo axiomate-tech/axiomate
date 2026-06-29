@@ -1,0 +1,202 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-lockup.png";
+import Icon from "./Icon.astro";
+import { nav, site } from "../data/content";
+---
+
+<header class="site-header" data-header>
+  <div class="container bar">
+    <a href="#top" class="brand" aria-label={`${site.name} — home`}>
+      <Image src={logo} alt={site.name} height={28} densities={[1, 2]} loading="eager" />
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      {nav.links.map((l) => <a href={l.href} data-spy-link={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="nav-actions">
+      <a href={nav.cta.href} class="btn btn-primary nav-cta">
+        {nav.cta.label}<Icon name="arrow" class="arrow" size={16} />
+      </a>
+      <button
+        class="menu-toggle"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+      >
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+    <nav aria-label="Mobile">
+      {nav.links.map((l) => <a href={l.href} data-menu-link>{l.label}</a>)}
+      <a href={nav.cta.href} class="btn btn-primary btn-block" data-menu-link>{nav.cta.label}</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = document.querySelector<HTMLElement>("[data-mobile-menu]");
+
+  // Glass-on-scroll
+  const onScroll = () => header?.classList.toggle("is-scrolled", window.scrollY > 8);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Mobile menu
+  const setMenu = (open: boolean) => {
+    if (!menu || !toggle) return;
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    header?.classList.toggle("menu-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) menu.hidden = false;
+    else setTimeout(() => (menu.hidden = true), 280);
+  };
+  toggle?.addEventListener("click", () =>
+    setMenu(toggle.getAttribute("aria-expanded") !== "true"),
+  );
+  menu?.querySelectorAll("[data-menu-link]").forEach((l) =>
+    l.addEventListener("click", () => setMenu(false)),
+  );
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") setMenu(false);
+  });
+
+  // Scrollspy — highlight the section currently in view
+  const spyLinks = new Map<string, Element>();
+  document.querySelectorAll("[data-spy-link]").forEach((l) => {
+    const id = l.getAttribute("data-spy-link");
+    if (id) spyLinks.set(id.replace("#", ""), l);
+  });
+  const sections = [...spyLinks.keys()]
+    .map((id) => document.getElementById(id))
+    .filter((s): s is HTMLElement => !!s);
+  if ("IntersectionObserver" in window && sections.length) {
+    const spy = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            spyLinks.forEach((l) => l.removeAttribute("aria-current"));
+            spyLinks.get(e.target.id)?.setAttribute("aria-current", "true");
+          }
+        }
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    sections.forEach((s) => spy.observe(s));
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 13, 18, 0.72);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transition: opacity var(--t) var(--ease);
+  }
+  .site-header.is-scrolled::before { opacity: 1; }
+
+  .bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 4.5rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: opacity var(--t-fast) var(--ease);
+  }
+  .brand:hover { opacity: 0.85; }
+  .brand :global(img) { height: 28px; width: auto; }
+
+  .nav-links {
+    display: none;
+    gap: 0.4rem;
+    margin-inline: auto;
+  }
+  .nav-links a {
+    position: relative;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--muted);
+    border-radius: var(--radius-pill);
+    transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+  }
+  .nav-links a:hover { color: var(--text-strong); }
+  .nav-links a[aria-current="true"] {
+    color: var(--text-strong);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .nav-cta { display: none; }
+
+  .menu-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--text);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background-color var(--t-fast) var(--ease);
+  }
+  .menu-toggle:hover { background: rgba(255, 255, 255, 0.08); }
+
+  /* Mobile menu panel */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 1rem var(--gutter) 1.5rem;
+    background: rgba(10, 13, 18, 0.96);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    transform-origin: top;
+    transform: translateY(-8px);
+    opacity: 0;
+    transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
+  }
+  .site-header.menu-open .mobile-menu { opacity: 1; transform: none; }
+  .mobile-menu nav { display: flex; flex-direction: column; gap: 0.35rem; }
+  .mobile-menu a:not(.btn) {
+    padding: 0.85rem 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu .btn { margin-top: 1rem; }
+
+  @media (min-width: 900px) {
+    .nav-links { display: flex; }
+    .nav-cta { display: inline-flex; }
+    .menu-toggle { display: none; }
+  }
+</style>

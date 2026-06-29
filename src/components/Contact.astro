@@ -1,0 +1,249 @@
+---
+import Icon from "./Icon.astro";
+import { contact, site } from "../data/content";
+---
+
+<section class="section contact-sec" id="contact">
+  <div class="glow-orb orb-c" aria-hidden="true"></div>
+  <div class="container contact-grid">
+    <div class="contact-intro reveal">
+      <p class="eyebrow">{contact.eyebrow}</p>
+      <h2>{contact.title}</h2>
+      <p class="lead">{contact.lead}</p>
+
+      <ul class="contact-meta" role="list">
+        <li>
+          <span class="icon-chip"><Icon name="mail" size={18} /></span>
+          <div>
+            <span class="cm-label">Email</span>
+            <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          </div>
+        </li>
+        <li>
+          <span class="icon-chip"><Icon name="calendar" size={18} /></span>
+          <div>
+            <span class="cm-label">Prefer to talk?</span>
+            <a href={site.contact.bookingUrl}>Book a discovery call</a>
+          </div>
+        </li>
+        <li>
+          <span class="icon-chip"><Icon name="pin" size={18} /></span>
+          <div>
+            <span class="cm-label">{site.contact.location}</span>
+            <span class="faint">{site.contact.responseTime}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-card reveal" style="--reveal-delay:120ms">
+      <form
+        id="contact-form"
+        class="contact-form"
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        novalidate
+      >
+        <input type="hidden" name="access_key" value={site.contact.web3formsKey} />
+        <input type="hidden" name="subject" value="New inquiry via axiomate.io" />
+        <input type="hidden" name="from_name" value="axiomate website" />
+        <!-- honeypot: real users never fill this -->
+        <input
+          type="checkbox"
+          name="botcheck"
+          class="hp-field"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
+
+        <div class="fields">
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input id="cf-name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="cf-email">Work email</label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="cf-company">Company <span class="opt">(optional)</span></label>
+            <input id="cf-company" name="company" type="text" autocomplete="organization" />
+          </div>
+          <div class="field">
+            <label for="cf-interest">Interested in</label>
+            <select id="cf-interest" name="interest">
+              {contact.interests.map((opt) => <option value={opt}>{opt}</option>)}
+            </select>
+          </div>
+          <div class="field full">
+            <label for="cf-message">What are you trying to solve?</label>
+            <textarea id="cf-message" name="message" rows="4" required></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" data-submit>
+          <span class="btn-text">Send message</span>
+          <Icon name="send" class="arrow" size={17} />
+        </button>
+
+        <p class="form-status" data-status role="status" aria-live="polite"></p>
+        <p class="form-fineprint faint">
+          By submitting, you agree to be contacted about your enquiry. No spam, ever.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  if (form) {
+    const statusEl = form.querySelector<HTMLElement>("[data-status]");
+    const submitBtn = form.querySelector<HTMLButtonElement>("[data-submit]");
+    const btnText = form.querySelector<HTMLElement>(".btn-text");
+    const key = (form.querySelector('[name="access_key"]') as HTMLInputElement)?.value;
+
+    const setStatus = (msg: string, kind: "ok" | "err" | "") => {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.dataset.kind = kind;
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus("", "");
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      if (!key || key === "YOUR_WEB3FORMS_ACCESS_KEY") {
+        setStatus(
+          "Form isn't connected yet — add your free Web3Forms key in src/data/content.ts.",
+          "err",
+        );
+        return;
+      }
+
+      submitBtn?.setAttribute("disabled", "true");
+      if (btnText) btnText.textContent = "Sending…";
+
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+        const data = await res.json();
+        if (data.success) {
+          form.reset();
+          setStatus("Thanks — your message is in. We'll reply within 1 business day.", "ok");
+        } else {
+          setStatus(data.message || "Something went wrong. Please email us directly.", "err");
+        }
+      } catch {
+        setStatus("Network error. Please email us directly.", "err");
+      } finally {
+        submitBtn?.removeAttribute("disabled");
+        if (btnText) btnText.textContent = "Send message";
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-sec { position: relative; overflow: hidden; isolation: isolate; }
+  .orb-c {
+    width: 50vw;
+    max-width: 620px;
+    aspect-ratio: 1;
+    top: -10%;
+    right: -12%;
+    background: radial-gradient(circle, rgba(var(--cyan-rgb) / 0.28), transparent 65%);
+  }
+  .contact-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: clamp(2.5rem, 1rem + 5vw, 4rem);
+    align-items: start;
+  }
+  .contact-intro h2 { font-size: var(--fs-h2); margin-top: 1rem; }
+  .contact-intro .lead { margin-top: 1.1rem; max-width: 40ch; }
+
+  .contact-meta { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2.5rem; }
+  .contact-meta li { display: flex; align-items: center; gap: 0.9rem; }
+  .contact-meta .icon-chip { flex-shrink: 0; width: 2.6rem; height: 2.6rem; }
+  .contact-meta .icon-chip :global(svg) { width: 1.2rem; height: 1.2rem; }
+  .contact-meta > li > div { display: flex; flex-direction: column; }
+  .cm-label { font-size: var(--fs-sm); color: var(--faint); }
+  .contact-meta a { font-weight: 500; color: var(--text); }
+  .contact-meta a:hover { color: var(--cyan-300); }
+
+  .contact-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    border: 1px solid var(--border-2);
+    border-radius: var(--radius-xl);
+    padding: clamp(1.5rem, 1rem + 2vw, 2.4rem);
+    box-shadow: var(--shadow-lg);
+  }
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem;
+  }
+  .field { display: flex; flex-direction: column; gap: 0.45rem; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: var(--fs-sm); font-weight: 500; color: var(--text); }
+  .opt { color: var(--faint); font-weight: 400; }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-strong);
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  }
+  .field textarea { resize: vertical; min-height: 6.5rem; }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--cyan-500);
+    box-shadow: 0 0 0 3px rgba(var(--cyan-rgb) / 0.18);
+  }
+  .field select { appearance: none; cursor: pointer; }
+
+  .hp-field {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  [data-submit] { margin-top: 1.4rem; }
+  [data-submit][disabled] { opacity: 0.7; cursor: progress; }
+
+  .form-status {
+    margin-top: 1rem;
+    font-size: var(--fs-sm);
+    min-height: 1.25rem;
+  }
+  .form-status[data-kind="ok"] { color: var(--cyan-300); }
+  .form-status[data-kind="err"] { color: #ff8b8b; }
+  .form-fineprint { margin-top: 0.5rem; font-size: 0.8rem; }
+
+  @media (min-width: 940px) {
+    .contact-grid { grid-template-columns: 0.9fr 1.1fr; }
+  }
+  @media (max-width: 520px) {
+    .fields { grid-template-columns: 1fr; }
+  }
+</style>

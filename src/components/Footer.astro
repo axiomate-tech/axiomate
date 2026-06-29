@@ -1,0 +1,133 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-lockup.png";
+import Icon from "./Icon.astro";
+import { site, footer, nav } from "../data/content";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="hr" aria-hidden="true"></div>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="#top" class="brand" aria-label={`${site.name} — home`}>
+        <Image src={logo} alt={site.name} height={26} densities={[1, 2]} loading="lazy" />
+      </a>
+      <p class="footer-blurb muted">{footer.blurb}</p>
+      <ul class="socials" role="list">
+        {
+          site.social.map((s) => (
+            <li>
+              <a href={s.href} aria-label={s.label} target="_blank" rel="noopener noreferrer">
+                <Icon name={s.icon} size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {
+      footer.columns.map((col) => (
+        <nav class="footer-col" aria-label={col.title}>
+          <h3>{col.title}</h3>
+          <ul role="list">
+            {col.links.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+
+    <div class="footer-col footer-cta">
+      <h3>Get started</h3>
+      <p class="muted">{site.contact.responseTime}</p>
+      <a href={nav.cta.href} class="btn btn-primary">
+        Book a call<Icon name="arrow" class="arrow" size={16} />
+      </a>
+      <a href={`mailto:${site.contact.email}`} class="footer-mail">{site.contact.email}</a>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p class="faint">© {year} {site.name}. All rights reserved.</p>
+    <a href="#top" class="to-top">
+      Back to top<Icon name="chevron" size={15} />
+    </a>
+  </div>
+</footer>
+
+<style>
+  .site-footer { padding-top: clamp(3rem, 2rem + 3vw, 4.5rem); }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+  }
+  .footer-brand { max-width: 30ch; }
+  .footer-brand .brand :global(img) { height: 26px; width: auto; }
+  .footer-blurb { margin-top: 1.1rem; font-size: var(--fs-sm); }
+
+  .socials { display: flex; gap: 0.6rem; margin-top: 1.4rem; }
+  .socials a {
+    display: grid;
+    place-items: center;
+    width: 2.4rem; height: 2.4rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+      background-color var(--t-fast) var(--ease);
+  }
+  .socials a:hover {
+    color: var(--cyan-300);
+    border-color: var(--border-glow);
+    background: rgba(var(--cyan-rgb) / 0.08);
+  }
+
+  .footer-col h3 {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 1.1rem;
+  }
+  .footer-col ul { display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col a { color: var(--muted); font-size: var(--fs-sm); }
+  .footer-col a:hover { color: var(--text-strong); }
+
+  .footer-cta .btn { margin: 1.25rem 0 1rem; }
+  .footer-cta p { font-size: var(--fs-sm); }
+  .footer-mail { display: block; font-size: var(--fs-sm); color: var(--muted); }
+  .footer-mail:hover { color: var(--cyan-300); }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+    padding-block: 2rem;
+    border-top: 1px solid var(--border);
+    font-size: var(--fs-sm);
+  }
+  .to-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+  }
+  .to-top:hover { color: var(--cyan-300); }
+  .to-top :global(svg) { transform: rotate(180deg); }
+
+  @media (min-width: 720px) {
+    .footer-grid { grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 2rem; }
+  }
+</style>

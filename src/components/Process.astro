@@ -1,0 +1,79 @@
+---
+import Icon from "./Icon.astro";
+import { process } from "../data/content";
+---
+
+<section class="section process-sec" id="process">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow is-centered">{process.eyebrow}</p>
+      <h2>{process.title}</h2>
+      <p class="lead">{process.lead}</p>
+    </div>
+
+    <ol class="steps" role="list">
+      {
+        process.steps.map((s, i) => (
+          <li class="step reveal" style={`--reveal-delay:${i * 90}ms`}>
+            <div class="step-top">
+              <span class="icon-chip">
+                <Icon name={s.icon} />
+              </span>
+              <span class="step-no">{s.no}</span>
+            </div>
+            <h3 class="step-title">{s.title}</h3>
+            <p class="muted step-desc">{s.description}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 1.25rem;
+    margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .step {
+    position: relative;
+    padding: 1.6rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .step-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .step-no {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--border-2);
+    letter-spacing: 0.02em;
+  }
+  .step-title { font-size: 1.2rem; }
+  .step-desc { margin-top: 0.6rem; font-size: var(--fs-sm); }
+
+  /* connecting arrows between steps on wider screens */
+  @media (min-width: 860px) {
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 2.95rem;
+      right: -0.78rem;
+      width: 0.7rem;
+      height: 0.7rem;
+      border-top: 1.5px solid var(--border-2);
+      border-right: 1.5px solid var(--border-2);
+      transform: rotate(45deg);
+      z-index: 1;
+    }
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+import { stats } from "../data/content";
+---
+
+<section class="section stats-sec" aria-label={stats.title}>
+  <div class="container">
+    <div class="stats-band reveal">
+      <div class="grid-overlay" aria-hidden="true"></div>
+      <div class="stats-head">
+        <p class="eyebrow is-centered">{stats.eyebrow}</p>
+        <h2>{stats.title}</h2>
+      </div>
+
+      <dl class="stats-grid">
+        {
+          stats.items.map((s) => (
+            <div class="stat" data-count={String(s.value)}>
+              <dt class="stat-val">
+                {s.prefix}<span class="num">0</span>{s.suffix}
+              </dt>
+              <dd class="stat-label">{s.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <p class="stats-note faint">{stats.note}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fmt = (v: number, dec: number) =>
+    v.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+  const animate = (el: HTMLElement) => {
+    const raw = el.dataset.count ?? "0";
+    const target = parseFloat(raw);
+    const dec = raw.includes(".") ? 1 : 0;
+    const out = el.querySelector<HTMLElement>(".num");
+    if (!out) return;
+    if (reduce) {
+      out.textContent = fmt(target, dec);
+      return;
+    }
+    const dur = 1500;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      out.textContent = fmt(target * eased, dec);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const nodes = document.querySelectorAll<HTMLElement>("[data-count]");
+  if (!("IntersectionObserver" in window)) {
+    nodes.forEach(animate);
+  } else {
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            animate(e.target as HTMLElement);
+            obs.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.4 },
+    );
+    nodes.forEach((n) => io.observe(n));
+  }
+</script>
+
+<style>
+  .stats-band {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2.5rem, 1.5rem + 4vw, 4rem) clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    background:
+      radial-gradient(120% 140% at 50% -20%, rgba(var(--cyan-rgb) / 0.12), transparent 60%),
+      var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+  .stats-head { text-align: center; position: relative; z-index: 1; }
+  .stats-head h2 { font-size: var(--fs-h2); margin-top: 0.9rem; }
+
+  .stats-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 1.5rem;
+    margin-top: clamp(2rem, 1rem + 3vw, 3.25rem);
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 3.4rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, var(--cyan-300), var(--cyan-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .stat-label {
+    margin-top: 0.7rem;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    max-width: 22ch;
+    margin-inline: auto;
+  }
+  .stats-note {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 2.25rem;
+  }
+</style>

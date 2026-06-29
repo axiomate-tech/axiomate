@@ -1,0 +1,88 @@
+---
+import Icon from "./Icon.astro";
+import { faq } from "../data/content";
+---
+
+<section class="section faq-sec" id="faq">
+  <div class="container faq-grid">
+    <div class="section-head faq-head reveal">
+      <p class="eyebrow">{faq.eyebrow}</p>
+      <h2>{faq.title}</h2>
+    </div>
+
+    <div class="faq-list reveal">
+      {
+        faq.items.map((item) => (
+          <details name="faq" class="faq-item">
+            <summary>
+              <span class="faq-q">{item.q}</span>
+              <span class="faq-ic"><Icon name="plus" size={20} /></span>
+            </summary>
+            <div class="faq-a">
+              <p>{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-grid {
+    display: grid;
+    gap: clamp(2rem, 1rem + 4vw, 3.5rem);
+    align-items: start;
+  }
+  .faq-head { text-align: left; margin-inline: 0; }
+  .faq-head h2 { font-size: var(--fs-h2); margin-top: 1rem; }
+
+  .faq-list { display: flex; flex-direction: column; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.4rem 0.25rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1rem + 0.4vw, 1.2rem);
+    font-weight: 600;
+    color: var(--text-strong);
+    transition: color var(--t-fast) var(--ease);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary:hover { color: var(--cyan-300); }
+
+  .faq-ic {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    color: var(--cyan-300);
+    border: 1px solid var(--border-2);
+    transition: transform var(--t) var(--ease), background-color var(--t-fast) var(--ease);
+  }
+  .faq-item[open] .faq-ic {
+    transform: rotate(45deg);
+    background: rgba(var(--cyan-rgb) / 0.12);
+  }
+
+  .faq-a { padding: 0 3.5rem 1.5rem 0.25rem; }
+  .faq-a p { color: var(--muted); }
+  .faq-item[open] .faq-a { animation: faqIn 0.34s var(--ease-out); }
+  @keyframes faqIn {
+    from { opacity: 0; transform: translateY(-6px); }
+  }
+
+  @media (min-width: 900px) {
+    .faq-grid { grid-template-columns: 0.8fr 1.2fr; }
+    .faq-head { position: sticky; top: 6rem; }
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+import Icon from "./Icon.astro";
+import { services } from "../data/content";
+---
+
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow is-centered">{services.eyebrow}</p>
+      <h2>{services.title}</h2>
+      <p class="lead">{services.lead}</p>
+    </div>
+
+    <div class="svc-grid">
+      {
+        services.items.map((s, i) => (
+          <article class="card card-hover svc reveal" style={`--reveal-delay:${(i % 3) * 80}ms`}>
+            <div class="svc-top">
+              <span class="icon-chip">
+                <Icon name={s.icon} />
+              </span>
+              <span class="svc-pillar">{s.pillar}</span>
+            </div>
+            <h3 class="svc-title">{s.title}</h3>
+            <p class="svc-tagline">{s.tagline}</p>
+            <p class="svc-desc">{s.description}</p>
+            <ul class="svc-tags" role="list">
+              {s.tags.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .svc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 1.25rem;
+    margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .svc { display: flex; flex-direction: column; }
+  .svc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .svc-pillar {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+  }
+  .svc-title { font-size: 1.32rem; }
+  .svc-tagline {
+    margin-top: 0.5rem;
+    font-weight: 600;
+    color: var(--cyan-300);
+  }
+  .svc-desc { margin-top: 0.7rem; color: var(--muted); font-size: var(--fs-sm); }
+  .svc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.4rem;
+    padding-top: 1.3rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
