@@ -1,4 +1,5 @@
 ---
+import Icon from "./Icon.astro";
 import { outcomes } from "../data/content";
 ---
 
@@ -10,17 +11,28 @@ import { outcomes } from "../data/content";
       <p class="lead">{outcomes.lead}</p>
     </div>
 
-    <div class="quotes">
+    <div class="cases">
       {
-        outcomes.items.map((t, i) => (
-          <figure class="card card-hover quote reveal" style={`--reveal-delay:${i * 80}ms`}>
-            <span class="quote-mark" aria-hidden="true">&ldquo;</span>
-            <blockquote>{t.quote}</blockquote>
-            <figcaption>
-              <span class="quote-role">{t.role}</span>
-              <span class="quote-company">{t.company}</span>
-            </figcaption>
-          </figure>
+        outcomes.items.map((c, i) => (
+          <article class="card card-hover case reveal" style={`--reveal-delay:${i * 80}ms`}>
+            <div class="case-top">
+              <span class="icon-chip">
+                <Icon name={c.icon} size={20} />
+              </span>
+              <span class="tag">{c.tag}</span>
+            </div>
+            <h3>{c.title}</h3>
+            <p class="case-label">The problem</p>
+            <p class="case-body">{c.problem}</p>
+            <p class="case-label">What we built</p>
+            <p class="case-body">{c.build}</p>
+            <p class="case-label">The result</p>
+            <p class="case-body is-result">{c.result}</p>
+            <figure class="case-quote">
+              <blockquote>&ldquo;{c.quote}&rdquo;</blockquote>
+              <figcaption>{c.who}</figcaption>
+            </figure>
+          </article>
         ))
       }
     </div>
@@ -28,35 +40,56 @@ import { outcomes } from "../data/content";
 </section>
 
 <style>
-  .quotes {
+  .cases {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
     gap: 1.25rem;
     margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
   }
-  .quote { display: flex; flex-direction: column; }
-  .quote-mark {
-    font-family: var(--font-display);
-    font-size: 3.5rem;
-    line-height: 0.7;
-    height: 1.4rem;
-    color: var(--cyan-500);
-    opacity: 0.55;
-  }
-  .quote blockquote {
-    margin: 1.2rem 0 1.6rem;
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: var(--text);
-  }
-  .quote figcaption {
-    margin-top: auto;
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--border);
+  .case { display: flex; flex-direction: column; }
+  .case-top {
     display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.2rem;
   }
-  .quote-role { font-weight: 600; color: var(--text-strong); }
-  .quote-company { font-size: var(--fs-sm); color: var(--faint); }
+  .case h3 {
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+  .case-label {
+    margin-top: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--cyan-300);
+  }
+  .case-body {
+    margin-top: 0.4rem;
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    color: var(--muted);
+  }
+  .case-body.is-result { color: var(--text); }
+  .case-quote {
+    margin-top: auto;
+    padding-top: 1.4rem;
+  }
+  .case-quote blockquote {
+    padding: 0.9rem 1.1rem;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    font-style: italic;
+    color: var(--text);
+    background: rgba(var(--cyan-rgb) / 0.06);
+    border-left: 2px solid var(--cyan-500);
+    border-radius: 0 12px 12px 0;
+  }
+  .case-quote figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    color: var(--faint);
+  }
 </style>

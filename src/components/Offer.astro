@@ -1,0 +1,143 @@
+---
+import Icon from "./Icon.astro";
+import { offer } from "../data/content";
+---
+
+<section class="section" id="offer">
+  <div class="container">
+    <div class="offer-band reveal">
+      <div class="grid-overlay" aria-hidden="true"></div>
+
+      <div class="offer-grid">
+        <div class="offer-pitch">
+          <p class="eyebrow">{offer.eyebrow}</p>
+          <h2>{offer.title}</h2>
+          <p class="lead">{offer.lead}</p>
+
+          <ul class="offer-meta" role="list">
+            {offer.meta.map((m) => <li>{m}</li>)}
+          </ul>
+
+          <a href={offer.cta.href} class="btn btn-primary btn-lg offer-cta">
+            {offer.cta.label}<Icon name="arrow" class="arrow" size={18} />
+          </a>
+        </div>
+
+        <div class="offer-box">
+          <p class="offer-box-title">{offer.deliverablesTitle}</p>
+          <ul class="offer-list" role="list">
+            {
+              offer.deliverables.map((d) => (
+                <li>
+                  <span class="check">
+                    <Icon name="check" size={14} />
+                  </span>
+                  {d}
+                </li>
+              ))
+            }
+          </ul>
+          <p class="offer-note">{offer.note}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .offer-band {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2.25rem, 1.5rem + 3.5vw, 4rem) clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    background:
+      radial-gradient(110% 130% at 15% -15%, rgba(var(--cyan-rgb) / 0.14), transparent 55%),
+      var(--surface);
+    border: 1px solid rgba(var(--cyan-rgb) / 0.28);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg), 0 0 90px -40px rgba(var(--cyan-rgb) / 0.55);
+  }
+  .offer-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: clamp(2rem, 1rem + 3vw, 3.5rem);
+    align-items: center;
+  }
+
+  .offer-pitch h2 {
+    font-size: var(--fs-h2);
+    margin-top: 0.9rem;
+    max-width: 18ch;
+  }
+  .offer-pitch .lead {
+    margin-top: 1.1rem;
+    max-width: 46ch;
+  }
+
+  .offer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .offer-meta li {
+    padding: 0.4rem 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--cyan-300);
+    background: rgba(var(--cyan-rgb) / 0.08);
+    border: 1px solid rgba(var(--cyan-rgb) / 0.22);
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .offer-cta { margin-top: 1.8rem; }
+
+  .offer-box {
+    padding: 1.5rem 1.5rem 1.4rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--radius-lg);
+  }
+  .offer-box-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+  .offer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1.1rem;
+  }
+  .offer-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .offer-list .check {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 0.1rem;
+    border-radius: 50%;
+    color: #04181a;
+    background: var(--cyan-400);
+  }
+  .offer-note {
+    margin-top: 1.3rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--faint);
+  }
+
+  @media (min-width: 940px) {
+    .offer-grid { grid-template-columns: 1.05fr 0.95fr; }
+  }
+</style>

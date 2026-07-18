@@ -19,3 +19,5 @@ pnpm-debug.log*
 .vscode/
 .idea/
 website/
+# private business docs — repo is public, keep strategy out of it
+axiomate_client_acquisition_roadmap.md

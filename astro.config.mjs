@@ -4,8 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: change to your real domain before launch
-  site: 'https://axiomate.io',
+  site: 'https://axiomate.tech',
   integrations: [sitemap()],
   compressHTML: true,
   build: {

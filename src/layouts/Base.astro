@@ -11,7 +11,7 @@ interface Props {
 }
 
 const {
-  title = `${site.name} — Cloud, Automation & AI Solutions`,
+  title = `${site.name} — AI & Automation for US Collections BPOs`,
   description = site.description,
 } = Astro.props;
 
@@ -28,8 +28,16 @@ const jsonLd = {
   email: site.contact.email,
   logo: new URL("/icon-512.png", base).toString(),
   image: ogImage,
-  areaServed: "Worldwide",
-  knowsAbout: ["Cloud computing", "DevOps", "Process automation", "Artificial intelligence", "LLM applications"],
+  areaServed: "United States",
+  knowsAbout: [
+    "Debt collection operations",
+    "FDCPA compliance tooling",
+    "Call center automation",
+    "AI voice agents",
+    "Agent training simulators",
+    "BPO workflow automation",
+    "CRM customization",
+  ],
   sameAs: site.social.map((s) => s.href),
 };
 ---

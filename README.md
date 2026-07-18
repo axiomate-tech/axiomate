@@ -2,10 +2,11 @@
 
 # axiomate
 
-**Cloud, automation & AI solutions — marketing site**
+**AI & automation for US collections BPOs — marketing site**
 
 A fast, accessible, production-ready one-page site built with [Astro](https://astro.build).
-Dark "future-of-finance" aesthetic, brand-cyan accents, self-hosted fonts, near-zero JavaScript.
+Dark fintech aesthetic, brand-cyan accents, self-hosted fonts, near-zero JavaScript.
+Positioned for one buyer: ops/training leaders at US collections BPOs.
 
 </div>
 
@@ -47,14 +48,14 @@ Everything you need to edit lives in **`src/data/content.ts`** (plus one line in
 1. **Contact form key** — _the form will not send until you do this:_
    - Go to [web3forms.com](https://web3forms.com), enter your email, copy the free access key.
    - Paste it into `content.ts` → `site.contact.web3formsKey`.
-2. **Contact email** — `site.contact.email` (currently `akworks247@gmail.com`; consider a branded address like `hello@axiomate.io`).
+2. **Contact email** — `site.contact.email` (currently `akworks247@gmail.com`; set up `arsh@axiomate.tech` — Zoho Mail has a free tier — and swap it in. Also matters for cold-email deliverability).
 3. **Booking link** — `site.contact.bookingUrl` (paste your Calendly / Cal.com link; currently jumps to the form).
-4. **Domain** — set your real domain in **two** places so canonical URLs, Open Graph tags, and the sitemap are correct:
-   - `astro.config.mjs` → `site`
-   - `content.ts` → `site.url` and `site.domain`
-5. **Social links** — `site.social` (LinkedIn / X / GitHub URLs).
-6. **Testimonials** — `outcomes.items` are realistic **placeholders** with role-based attribution. Replace with real, named quotes once you have permission.
-7. **Stats** — `stats.items` are framed as *target* outcomes with a disclaimer. Adjust to your real figures.
+4. ~~**Domain**~~ — ✅ set to `axiomate.tech` in both `astro.config.mjs` and `content.ts`.
+5. **Social links** — `site.social` (LinkedIn / X URLs still point at placeholder handles).
+6. ~~**Case studies**~~ — ✅ `outcomes.items` now carry your three real builds with the measured **40%** result and real role-attributed quotes. Optional upgrade: named attribution + company once you have written permission.
+7. ~~**Stats**~~ — ✅ leads with the measured 40%; the rest are labeled as design targets in the disclaimer. Swap in more measured figures as you collect them.
+8. **Marquee tech list** — `marquee.items` names common collections-floor platforms (Five9, Genesys, NICE CXone, Vapi, Retell AI…). Trim it to the tools you genuinely work with.
+9. ~~**Entry offer**~~ — ✅ the fixed-fee **Collections AI & Automation Audit** has its own section (`offer` in `content.ts`, `#offer` on the page). Decide the actual fee before your first outreach — the site intentionally says "quoted upfront."
 
 Tip: search the codebase for `TODO` to find every spot that needs your input.
 
@@ -89,7 +90,7 @@ If you change the logo, re-run the generation steps (see commit notes) or ask to
 ```
 src/
 ├── assets/         # brand images (optimized at build)
-├── components/     # Nav, Hero, Services, Process, Stats, WhyUs, Outcomes, Faq, Contact, Footer, Icon
+├── components/     # Nav, Hero, Services, Process, Offer, Stats, WhyUs, Outcomes, Faq, Contact, Footer, Icon
 ├── data/content.ts # 👈 single source of truth for all copy & config
 ├── layouts/Base.astro  # <head>, SEO/OG meta, JSON-LD, fonts, scroll-reveal
 ├── lib/icons.ts    # inline SVG icon set
