@@ -20,7 +20,7 @@ export const site = {
   /* --- Where leads go --- */
   contact: {
     // Paste your deployed Google Apps Script URL here (see scripts/google-form-handler.js for setup)
-    googleScriptUrl: "https://script.google.com/macros/s/AKfycbzpzxUfd2TAdmndTC0dBiw96DBvooL11Z1pstBigyQ1fb-olsrh9rAFrgaRqHr9EMOx/exec",
+    googleScriptUrl: "https://script.google.com/macros/s/AKfycbz1LgZGNGVDQEBOOSB5F45phU0VjcpxmLHE2TT9MEJBlTwUsRxrU2G6RHDNr7u1Uwc7/exec",
     email: "arsh@axiomate.tech",
     // TODO: paste your scheduling link (Calendly, Cal.com, etc.)
     bookingUrl: "#contact",
