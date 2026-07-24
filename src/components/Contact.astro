@@ -40,13 +40,9 @@ import { contact, site } from "../data/content";
       <form
         id="contact-form"
         class="contact-form"
-        action="https://api.web3forms.com/submit"
-        method="POST"
+        data-script-url={site.contact.googleScriptUrl}
         novalidate
       >
-        <input type="hidden" name="access_key" value={site.contact.web3formsKey} />
-        <input type="hidden" name="subject" value="New inquiry via axiomate.io" />
-        <input type="hidden" name="from_name" value="axiomate website" />
         <!-- honeypot: real users never fill this -->
         <input
           type="checkbox"
@@ -102,7 +98,7 @@ import { contact, site } from "../data/content";
     const statusEl = form.querySelector<HTMLElement>("[data-status]");
     const submitBtn = form.querySelector<HTMLButtonElement>("[data-submit]");
     const btnText = form.querySelector<HTMLElement>(".btn-text");
-    const key = (form.querySelector('[name="access_key"]') as HTMLInputElement)?.value;
+    const scriptUrl = form.dataset.scriptUrl;
 
     const setStatus = (msg: string, kind: "ok" | "err" | "") => {
       if (!statusEl) return;
@@ -118,9 +114,9 @@ import { contact, site } from "../data/content";
         form.reportValidity();
         return;
       }
-      if (!key || key === "YOUR_WEB3FORMS_ACCESS_KEY") {
+      if (!scriptUrl || scriptUrl === "YOUR_GOOGLE_SCRIPT_URL") {
         setStatus(
-          "Form isn't connected yet — add your free Web3Forms key in src/data/content.ts.",
+          "Form isn't connected yet — deploy the Google Apps Script and add the URL to content.ts.",
           "err",
         );
         return;
@@ -130,10 +126,13 @@ import { contact, site } from "../data/content";
       if (btnText) btnText.textContent = "Sending…";
 
       try {
-        const res = await fetch("https://api.web3forms.com/submit", {
+        const fd = new FormData(form);
+        const payload: Record<string, string> = {};
+        fd.forEach((v, k) => { payload[k] = v.toString(); });
+
+        const res = await fetch(scriptUrl, {
           method: "POST",
-          headers: { Accept: "application/json" },
-          body: new FormData(form),
+          body: JSON.stringify(payload),
         });
         const data = await res.json();
         if (data.success) {

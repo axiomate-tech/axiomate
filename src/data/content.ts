@@ -19,9 +19,9 @@ export const site = {
 
   /* --- Where leads go --- */
   contact: {
-    // TODO: replace with your free key from https://web3forms.com (takes 30s)
-    web3formsKey: "YOUR_WEB3FORMS_ACCESS_KEY",
-    email: "akworks247@gmail.com", // TODO: switch to arsh@axiomate.tech (Zoho Mail free tier works)
+    // Paste your deployed Google Apps Script URL here (see scripts/google-form-handler.js for setup)
+    googleScriptUrl: "https://script.google.com/macros/s/AKfycbwdbqseNO_GgQcLHuI9bveMJySA8v-Ev9HR3N3owGNlgPqy63fSAVxCKjOsJWpLhBFB/exec",
+    email: "arsh@axiomate.tech",
     // TODO: paste your scheduling link (Calendly, Cal.com, etc.)
     bookingUrl: "#contact",
     location: "Remote-first · Serving US BPOs",
@@ -308,7 +308,7 @@ export const outcomes: { eyebrow: string; title: string; lead: string; items: Ca
       result:
         "40% more conversations handled per agent, with lower average handle time per notification.",
       quote:
-        "We have beaten our competition by taking in more leads on a daily basis with the automation developed by Arsh.",
+        "The automation Arsh built has us pulling in more leads every day — it's put us ahead of the competition.",
       who: "Senior Manager, Operations · US collections BPO",
     },
     {
@@ -322,7 +322,7 @@ export const outcomes: { eyebrow: string; title: string; lead: string; items: Ca
       result:
         "More callbacks per voicemail dropped — in whatever voice fits the portfolio — with zero agent minutes wasted talking to machines.",
       quote:
-        "I could never believe AI could help us elevate our business before we got this tool implemented.",
+        "Before this tool, I never would have believed AI could make this kind of difference for our business.",
       who: "Director, Portfolio Management · US collections BPO",
     },
     {
@@ -336,7 +336,7 @@ export const outcomes: { eyebrow: string; title: string; lead: string; items: Ca
       result:
         "Daily task lists generated automatically and high-priority leads no longer lost — the floor works from the CRM, not from spreadsheets.",
       quote:
-        "We now have better track of our leads than before, when we were doing it in Excel — moving to the CRM has improved efficiency in the process.",
+        "We went from tracking leads in Excel to actually knowing where every account stands — the CRM has made the whole process more efficient.",
       who: "Operations Manager · US collections BPO",
     },
   ],

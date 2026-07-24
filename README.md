@@ -19,7 +19,7 @@ Positioned for one buyer: ops/training leaders at US collections BPOs.
 | **Framework** | Astro 7 (static output, ships almost no JS) |
 | **Styling** | Hand-written modern CSS + design tokens (`src/styles/global.css`), Astro scoped component styles |
 | **Fonts** | Self-hosted via Fontsource — Space Grotesk (display), Inter (body), JetBrains Mono (technical labels) |
-| **Contact form** | [Web3Forms](https://web3forms.com) — no backend required |
+| **Contact form** | Google Apps Script → Google Sheet + email notification (see `scripts/google-form-handler.js`) |
 | **Icons** | Inline SVG set (`src/lib/icons.ts`) |
 | **Images** | Optimized at build time (`astro:assets` → WebP) |
 
@@ -45,10 +45,10 @@ npm run preview  # preview the production build locally
 
 Everything you need to edit lives in **`src/data/content.ts`** (plus one line in the Astro config).
 
-1. **Contact form key** — _the form will not send until you do this:_
-   - Go to [web3forms.com](https://web3forms.com), enter your email, copy the free access key.
-   - Paste it into `content.ts` → `site.contact.web3formsKey`.
-2. **Contact email** — `site.contact.email` (currently `akworks247@gmail.com`; set up `arsh@axiomate.tech` — Zoho Mail has a free tier — and swap it in. Also matters for cold-email deliverability).
+1. **Contact form** — _the form will not send until you do this:_
+   - Follow the setup steps in `scripts/google-form-handler.js` (create a Google Sheet, deploy the Apps Script).
+   - Paste the deployed URL into `content.ts` → `site.contact.googleScriptUrl`.
+2. ~~**Contact email**~~ — ✅ set to `arsh@axiomate.tech`.
 3. **Booking link** — `site.contact.bookingUrl` (paste your Calendly / Cal.com link; currently jumps to the form).
 4. ~~**Domain**~~ — ✅ set to `axiomate.tech` in both `astro.config.mjs` and `content.ts`.
 5. **Social links** — `site.social` (LinkedIn / X URLs still point at placeholder handles).
